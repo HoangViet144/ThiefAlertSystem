@@ -8,8 +8,8 @@ import Login from '../auth/login'
 
 const Stack = createStackNavigator();
 const styles = StyleSheet.create({
-  headerTitleStyle: {
-    margin: 0,
+  headerLeftContainerStyle: {
+    marginTop: 50,
     padding: 0
   }
 })
@@ -32,7 +32,7 @@ export default NavigatorView = (props) => {
           headerTransparent
           options={{
             headerLeft: item.headerLeft,
-            headerTitleStyle: item.headerTitleStyle || styles.headerTitleStyle,
+            headerLeftContainerStyle: styles.headerLeftContainerStyle,
             headerTitle: '',
           }}
         />

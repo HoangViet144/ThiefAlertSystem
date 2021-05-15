@@ -22,6 +22,7 @@ const FloatingLabelInput = (props) => {
       onFocus={handleFocus}
       onBlur={handleBlur}
       keyboardType={props.keyboardType}
+      disabled={props.disabled}
     />
   )
 }
