@@ -3,12 +3,14 @@ import express from 'express';
 
 import admin from './firebase/firebase';
 import authRouter from 'apiRoutes/auth';
+import systemRouter from 'apiRoutes/system';
 import userRouter from 'apiRoutes/users';
 
 const app = express();
 
-app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/system', systemRouter);
+app.use('/api/users', userRouter);
 
 app.get('/api', async (req, res) => {
   try {
