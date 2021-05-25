@@ -18,7 +18,7 @@ const testPub = () => {
       const message = JSON.stringify([
         {
           id: '8',
-          name: 'MAGNETIC ',
+          name: 'MAGNETIC',
           data: sample(magneticValues),
           unit: '',
         },
