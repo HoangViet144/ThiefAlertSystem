@@ -1,6 +1,6 @@
 import {} from 'dotenv/config';
 import app from 'app';
-import { clientSubscribe } from 'mqttClient/subscribe.js';
+import { clientSubscribe } from 'mqttClient';
 
 import testInfared from 'utils/infaredPublisher.js';
 import testMagnetic from 'utils/magneticPublisher.js';

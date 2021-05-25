@@ -10,34 +10,6 @@ const topicLed = 'NPNLab_BBC/feeds/bk-iot-led';
 
 const client = mqtt.connect(MQTT_CONNECTION_STRING);
 
-export const clientSubscribe = () => {
-  try {
-    client.on('connect', () => {
-      console.log('Subcribe connect OK');
-      client.subscribe(topicInfared);
-      client.subscribe(topicMagnetic);
-    });
-
-    client.on('message', (topic, message) => {
-      try {
-        const msg = JSON.parse(message)[0];
-        console.log('MSG recieved', msg);
-
-        if (
-          (msg.name === 'INFARED' && msg.data.includes('1')) ||
-          (msg.name === 'MAGNETIC' && msg.data === 1)
-        ) {
-          turnOnAlert();
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 const turnOnAlert = () => {
   console.log('TURN ON ALERT');
   const speakerOnMsg = JSON.stringify([
@@ -70,3 +42,33 @@ const sendNotification = () => {
     global.sentNotification = true;
   }
 };
+
+export const clientSubscribe = () => {
+  try {
+    client.on('connect', () => {
+      console.log('Subcribe connect OK');
+      client.subscribe(topicInfared);
+      client.subscribe(topicMagnetic);
+    });
+
+    client.on('message', (topic, message) => {
+      try {
+        const msg = JSON.parse(message)[0];
+        console.log('MSG recieved', msg);
+
+        if (
+          (msg.name === 'INFARED' && msg.data.includes('1')) ||
+          (msg.name === 'MAGNETIC' && msg.data === 1)
+        ) {
+          turnOnAlert();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export default client;
