@@ -1,8 +1,14 @@
 import {} from 'dotenv/config';
 import express from 'express';
+
 import admin from './firebase/firebase';
+import authRouter from 'apiRoutes/auth';
+import userRouter from 'apiRoutes/users';
 
 const app = express();
+
+app.use('/api/users', userRouter);
+app.use('/api/auth', authRouter);
 
 app.get('/api', async (req, res) => {
   try {
