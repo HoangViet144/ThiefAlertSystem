@@ -5,6 +5,7 @@ const { MQTT_CONNECTION_STRING } = process.env;
 
 const topicSpeaker = 'NPNLab_BBC/feeds/bk-iot-speaker';
 const topicLed = 'NPNLab_BBC/feeds/bk-iot-led';
+const topicRelay = 'NPNLab_BBC/feeds/bk-iot-relay';
 
 const client = mqtt.connect(MQTT_CONNECTION_STRING);
 
@@ -13,6 +14,7 @@ const output = () => {
     console.log('===> Output devices is ready <===');
     client.subscribe(topicSpeaker);
     client.subscribe(topicLed);
+    client.subscribe(topicRelay);
   });
   client.on('message', (topic, message) => {
     try {
