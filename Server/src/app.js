@@ -1,4 +1,5 @@
 import {} from 'dotenv/config';
+import cors from 'cors';
 import express from 'express';
 
 import admin from './firebase/firebase';
@@ -7,6 +8,9 @@ import systemRouter from 'apiRoutes/system';
 import userRouter from 'apiRoutes/users';
 
 const app = express();
+
+app.use(cors());
+app.use(express.json());
 
 app.use('/api/auth', authRouter);
 app.use('/api/system', systemRouter);
