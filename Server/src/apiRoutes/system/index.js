@@ -1,6 +1,8 @@
 import { Router } from 'express';
 
 import { offAlert, offSystem, onSystem } from './controllers';
+import auth from '../middlewares/auth';
+
 const systemRouter = Router();
 
 systemRouter.use(auth);
