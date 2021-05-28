@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "512378764195",
+    "project_id": "thief-alert-system",
+    "storage_bucket": "thief-alert-system.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512378764195:android:c7baf34f1c71873008b816",
+        "android_client_info": {
+          "package_name": "com.thiefalertsystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "512378764195-oqk0rvvhivcfi0u4h3ua4nvsbor1rhet.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsrZMfbvWt0JEsVd1w7ipCWhD_tx_4ieI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "512378764195-oqk0rvvhivcfi0u4h3ua4nvsbor1rhet.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

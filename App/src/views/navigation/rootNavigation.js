@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 
 export default NavigatorView = (props) => {
   const { user } = useSelector(state => state.user)
-  //if (!user.isAuthenticated) return <Login />
+  if (!user.isAuthenticated) return <Login />
   return (
     <Stack.Navigator
       screenOptions={{

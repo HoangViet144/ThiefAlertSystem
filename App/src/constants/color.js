@@ -5,5 +5,6 @@ export const color = {
   GRAY: "#BEC2CE",
   BLACK: '#000',
   ON: "#49A793",
-  OFF: "#D2A9A3"
+  OFF: "#D2A9A3",
+  WARNING: "red"
 }

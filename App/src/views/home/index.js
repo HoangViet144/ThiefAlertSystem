@@ -4,15 +4,20 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  Alert
 } from 'react-native'
 import { useSelector } from 'react-redux'
 import { HOME } from '../../constants/language'
 import { normalize } from '../../constants/size'
 import { color } from '../../constants/color'
+import { BASE_URL } from '../../constants/config'
+import {
+  Tooltip
+} from 'react-native-elements'
 
 const Home = ({ navigation }) => {
-  const user = useSelector(state => state.user)
+  const user = useSelector(state => state.user.user)
   const [systemStatus, setSystemStatus] = useState(1)
   const status = [HOME.CHECKING, HOME.ON, HOME.OFF]
   const statusText = [HOME.CHECKINGTEXT, HOME.ONTEXT, HOME.OFFTEXT]
@@ -26,8 +31,30 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     console.log('fetch current system status')
   }, [])
-  const updateStatusHandler = () => {
-    console.log('update current system status')
+  const updateStatusHandler = async () => {
+    const url = BASE_URL + (systemStatus === 1 ? "/api/system/off-system" : "/api/system/on-system")
+    console.log('update current system status', url)
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-auth-token': user.token
+        },
+      })
+      if (response.status === 200) {
+        setSystemStatus(cur => 3 - cur)
+      } else {
+        setSystemStatus(0)
+        Alert.alert(
+          "Something wrong, please try again"
+        );
+      }
+      console.log(response.status)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const styles = StyleSheet.create({
@@ -63,9 +90,8 @@ const Home = ({ navigation }) => {
       fontSize: 17
     },
     avatar: {
-      width: normalize(30),
-      height: normalize(30),
-      borderRadius: 100
+      width: normalize(60),
+      height: normalize(60),
     },
     header: {
       marginTop: normalize(20),
@@ -78,10 +104,11 @@ const Home = ({ navigation }) => {
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.navigate('setting')}
+        //style={{backgroundColor:'red'}}
         >
           <Image
             style={styles.avatar}
-            source={require('../../../assets/home/avatar.jpg')}
+            source={require('../../../assets/home/settings.png')}
           />
         </TouchableOpacity>
       </View>

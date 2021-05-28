@@ -12,13 +12,46 @@ import Input from '../../component/floatingLabelInput'
 import {
   Button
 } from 'react-native-elements'
+import { BASE_URL } from '../../constants/config'
+import { useDispatch } from 'react-redux'
+import * as authAction from '../../store/reducer/userReducer'
+import messaging from '@react-native-firebase/messaging'
 
 const Login = (props) => {
   const [user, setUser] = useState({ username: '', password: '' })
   const [isLoading, setIsLoading] = useState(false)
-  const loginHanlder = () => {
+  const [mess, setMess] = useState('')
+  const dispatch = useDispatch()
+  const loginHanlder = async () => {
     console.log("create post request/...")
     setIsLoading(true)
+    setMess('')
+    try {
+      const token = await messaging().getToken()
+      console.log(token)
+      const raw = await fetch(BASE_URL + '/api/auth', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: user.username,
+          password: user.password,
+          //fcmtoken: token
+        })
+      })
+      const response = await raw.json()
+      if(response.hasOwnProperty('token')){
+        dispatch(authAction.login(response))
+      }
+      else{
+        setMess('Invalid email or password')
+        setIsLoading(false)
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
   return (
     <View style={styles.screen}>
@@ -27,6 +60,7 @@ const Login = (props) => {
           <Text style={styles.header}>{LOGIN.WELCOME}</Text>
         </View>
         <View style={styles.form}>
+          <Text style={styles.err}>{mess}</Text>
           <Input
             labelStyle={styles.labelStyle}
             label={LOGIN.USERNAME}
@@ -36,6 +70,7 @@ const Login = (props) => {
           />
           <Input
             labelStyle={styles.labelStyle}
+            secureTextEntry={true}
             label={LOGIN.PASSWORD}
             placeholder={LOGIN.PASSWORD}
             value={user.password}
@@ -118,5 +153,8 @@ const styles = StyleSheet.create({
   signup2: {
     fontSize: 15,
     fontWeight: 'bold'
+  },
+  err: {
+    color: color.WARNING
   }
 })

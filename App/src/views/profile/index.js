@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.WHITE,
   },
   headerContainer: {
-    marginTop: 15,
+    marginTop: 25,
     marginLeft: 60
   },
   header: {

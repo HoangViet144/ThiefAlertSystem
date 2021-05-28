@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Alert,
   ScrollView,
 } from 'react-native'
 import {
@@ -16,11 +17,17 @@ import { color } from '../../constants/color'
 import { SETTING } from '../../constants/language'
 import { normalize } from '../../constants/size'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { BASE_URL } from '../../constants/config'
+import moment from 'moment'
 
 const Setting = ({ navigation }) => {
-  const user = useSelector(state => state.user)
-  const [openTimeForm, setOpenTImeForm] = useState(false)
-  const [currentSettingTime, setCurrentSettingTime] = useState(new Date().getTime())
+  const user = useSelector(state => state.user.user)
+  const [openTimeForm, setOpenTimeForm] = useState(false)
+  const [stateSetTime, setStateSetTime] = useState(0)
+  const [currentSettingTime, setCurrentSettingTime] = useState({
+    start: new Date().getTime(),
+    end: new Date().getTime()
+  })
   const buttonData = [
     {
       title: SETTING.NOTI,
@@ -31,7 +38,7 @@ const Setting = ({ navigation }) => {
       title: SETTING.TIMING,
       icon: require('../../../assets/setting/timing.png'),
       style: { marginBottom: normalize(40) },
-      onPress: () => setOpenTImeForm(true)
+      onPress: () => setOpenTimeForm(true)
     },
     {
       title: SETTING.TERM,
@@ -54,11 +61,39 @@ const Setting = ({ navigation }) => {
       style: null,
     }
   ]
-  const timingHandler = (e, selectedTime) => {
-    setOpenTImeForm(false)
+  const [tmp, setTemp] = useState()
+  const timingStartHandler = (e, selectedTime) => {
+    setOpenTimeForm(false)
     if (selectedTime) {
-      setCurrentSettingTime(selectedTime.getTime())
-      console.log(selectedTime.toString())
+      setTemp(selectedTime.getTime())
+      setStateSetTime(1)
+    }
+  }
+  const timingEndHandler = async (e, selectedTime) => {
+    setStateSetTime(0)
+    if (selectedTime) {
+      setCurrentSettingTime({ start: tmp, end: selectedTime.getTime() })
+      Alert.alert(
+        "Update timing for system",
+        "Start: " + moment(tmp).format('hh:mm') + "\nEnd: " + moment(selectedTime).format('hh:mm')
+      )
+      try {
+        const response = await fetch(BASE_URL + "/api/system/set-timer", {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'x-auth-token': user.token
+          },
+          body: JSON.stringify({
+            start: new Date(tmp),
+            end: new Date(selectedTime)
+          })
+        })
+        console.log(response.status)
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
   return (
@@ -106,11 +141,18 @@ const Setting = ({ navigation }) => {
             />
           )}
           {openTimeForm && <DateTimePicker
-            value={new Date(currentSettingTime)}
+            value={new Date(currentSettingTime.start)}
             mode={'time'}
             is24Hour={true}
             display="default"
-            onChange={timingHandler}
+            onChange={timingStartHandler}
+          />}
+          {stateSetTime === 1 && <DateTimePicker
+            value={new Date(currentSettingTime.end)}
+            mode={'time'}
+            is24Hour={true}
+            display="default"
+            onChange={timingEndHandler}
           />}
         </View>
       </ScrollView>
@@ -125,7 +167,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.WHITE
   },
   headerContainer: {
-    marginTop: 15,
+    marginTop: 25,
     marginLeft: 60
   },
   header: {

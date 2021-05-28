@@ -8,19 +8,15 @@ const login = async (req, res) => {
 
   try {
     const user = await User.findOne({ where: { email } });
-
     if (user === null) {
       return res.status(400).send({ error: 'Invalid credentials!' });
     }
 
     const isValidCredential = await user.checkPassword(password);
-
     if (!isValidCredential) {
       return res.status(400).send({ error: 'Invalid credentials!' });
     }
-
     const token = await user.genAuthToken();
-
     return res.status(200).send({ token });
   } catch (error) {
     return res.status(500).send({
