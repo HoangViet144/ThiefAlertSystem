@@ -6,6 +6,7 @@ import {
 import TabNavigation from './tabNavigation'
 import Setting from '../setting/index'
 import Profile from '../profile/index'
+import Home from '../home/index'
 import { color } from '../../constants/color'
 
 const headerLeftComponent = (props) => {
@@ -28,7 +29,7 @@ const StackNavigationData = [
   {
     headerLeft: null,
     name: 'main',
-    component: TabNavigation,
+    component: Home,
   },
   {
     headerLeft: headerLeftComponent,
