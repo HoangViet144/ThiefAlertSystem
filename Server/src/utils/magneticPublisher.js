@@ -1,12 +1,7 @@
-import {} from 'dotenv/config';
 import sample from 'lodash/sample';
-import mqtt from 'mqtt';
 
-const { MQTT_CONNECTION_STRING } = process.env;
-
-const topicMagnetic = 'NPNLab_BBC/feeds/bk-iot-magnetic';
-
-const client = mqtt.connect(MQTT_CONNECTION_STRING);
+import client from 'mqttClient';
+import { TOPIC_MAGNETIC } from 'constants';
 
 const magneticValues = [0, 1];
 
@@ -24,8 +19,8 @@ const testPub = () => {
         },
       ]);
       console.log('TEST MAGNETIC SEND', message);
-      client.publish(topicMagnetic, message);
-    }, 5000);
+      client.publish(TOPIC_MAGNETIC, message);
+    }, 10000);
   });
 };
 

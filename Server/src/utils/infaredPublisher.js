@@ -1,12 +1,6 @@
-import {} from 'dotenv/config';
 import sample from 'lodash/sample';
-import mqtt from 'mqtt';
-
-const { MQTT_CONNECTION_STRING } = process.env;
-
-const topicInfared = 'NPNLab_BBC/feeds/bk-iot-infrared';
-
-const client = mqtt.connect(MQTT_CONNECTION_STRING);
+import client from 'mqttClient';
+import { TOPIC_INFARED } from 'constants';
 
 const infaredValues = ['00', '01', '10', '11'];
 
@@ -24,8 +18,8 @@ const testPub = () => {
         },
       ]);
       console.log('TEST INFARED SEND', message);
-      client.publish(topicInfared, message);
-    }, 5000);
+      client.publish(TOPIC_INFARED, message);
+    }, 10000);
   });
 };
 

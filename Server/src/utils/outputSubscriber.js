@@ -1,20 +1,12 @@
-import {} from 'dotenv/config';
-import mqtt from 'mqtt';
-
-const { MQTT_CONNECTION_STRING } = process.env;
-
-const topicSpeaker = 'NPNLab_BBC/feeds/bk-iot-speaker';
-const topicLed = 'NPNLab_BBC/feeds/bk-iot-led';
-const topicRelay = 'NPNLab_BBC/feeds/bk-iot-relay';
-
-const client = mqtt.connect(MQTT_CONNECTION_STRING);
+import client from 'mqttClient';
+import { TOPIC_SPEAKER, TOPIC_LED, TOPIC_RELAY } from 'constants';
 
 const output = () => {
   client.on('connect', () => {
     console.log('===> Output devices is ready <===');
-    client.subscribe(topicSpeaker);
-    client.subscribe(topicLed);
-    client.subscribe(topicRelay);
+    client.subscribe(TOPIC_SPEAKER);
+    client.subscribe(TOPIC_LED);
+    client.subscribe(TOPIC_RELAY);
   });
   client.on('message', (topic, message) => {
     try {

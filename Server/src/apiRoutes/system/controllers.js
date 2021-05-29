@@ -1,12 +1,10 @@
 import client from 'mqttClient';
 
-const topicSpeaker = 'NPNLab_BBC/feeds/bk-iot-speaker';
-const topicLed = 'NPNLab_BBC/feeds/bk-iot-led';
-const topicRelay = 'NPNLab_BBC/feeds/bk-iot-relay';
+import { TOPIC_SPEAKER, TOPIC_LED, TOPIC_RELAY } from 'constants';
 
 const offAlert = (req, res) => {
   client.publish(
-    topicSpeaker,
+    TOPIC_SPEAKER,
     JSON.stringify([
       {
         id: 3,
@@ -18,7 +16,7 @@ const offAlert = (req, res) => {
   );
 
   client.publish(
-    topicLed,
+    TOPIC_LED,
     JSON.stringify([
       {
         id: 1,
@@ -38,7 +36,7 @@ const offAlert = (req, res) => {
 
 const offSystem = (req, res) => {
   client.publish(
-    topicRelay,
+    TOPIC_RELAY,
     JSON.stringify([
       {
         id: 11,
@@ -58,7 +56,7 @@ const offSystem = (req, res) => {
 
 const onSystem = (req, res) => {
   client.publish(
-    topicRelay,
+    TOPIC_RELAY,
     JSON.stringify([
       {
         id: 11,

@@ -1,14 +1,20 @@
-import mqtt from 'mqtt';
 import {} from 'dotenv/config';
+import mqtt from 'mqtt';
 
-const { MQTT_CONNECTION_STRING } = process.env;
+import {
+  TOPIC_INFARED,
+  TOPIC_MAGNETIC,
+  TOPIC_SPEAKER,
+  TOPIC_LED,
+} from 'constants';
 
-const topicInfared = 'NPNLab_BBC/feeds/bk-iot-infrared';
-const topicMagnetic = 'NPNLab_BBC/feeds/bk-iot-magnetic';
-const topicSpeaker = 'NPNLab_BBC/feeds/bk-iot-speaker';
-const topicLed = 'NPNLab_BBC/feeds/bk-iot-led';
+const { MQTT_USER_NAME, MQTT_PASSWORD } = process.env;
 
-const client = mqtt.connect(MQTT_CONNECTION_STRING);
+const client = mqtt.connect({
+  servers: [{ host: 'io.adafruit.com', port: 1883, protocol: 'tcp' }],
+  username: MQTT_USER_NAME,
+  password: MQTT_PASSWORD,
+});
 
 const turnOnAlert = () => {
   console.log('TURN ON ALERT');
@@ -30,8 +36,8 @@ const turnOnAlert = () => {
     },
   ]);
 
-  client.publish(topicSpeaker, speakerOnMsg);
-  client.publish(topicLed, ledOnMsg);
+  client.publish(TOPIC_SPEAKER, speakerOnMsg);
+  client.publish(TOPIC_LED, ledOnMsg);
 
   sendNotification();
 };
@@ -47,8 +53,8 @@ export const clientSubscribe = () => {
   try {
     client.on('connect', () => {
       console.log('Subcribe connect OK');
-      client.subscribe(topicInfared);
-      client.subscribe(topicMagnetic);
+      client.subscribe(TOPIC_INFARED);
+      client.subscribe(TOPIC_MAGNETIC);
     });
 
     client.on('message', (topic, message) => {
