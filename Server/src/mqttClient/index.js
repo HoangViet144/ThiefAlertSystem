@@ -7,6 +7,7 @@ import {
   TOPIC_SPEAKER,
   TOPIC_LED,
 } from 'constants';
+import { MSG_LED_ON, MSG_SPEAKER_ON } from 'constants';
 
 const { MQTT_USER_NAME, MQTT_PASSWORD } = process.env;
 
@@ -18,26 +19,9 @@ const client = mqtt.connect({
 
 const turnOnAlert = () => {
   console.log('TURN ON ALERT');
-  const speakerOnMsg = JSON.stringify([
-    {
-      id: 3,
-      name: 'SPEAKER',
-      data: 1020,
-      unit: '',
-    },
-  ]);
 
-  const ledOnMsg = JSON.stringify([
-    {
-      id: 1,
-      name: 'LED',
-      data: 1,
-      unit: '',
-    },
-  ]);
-
-  client.publish(TOPIC_SPEAKER, speakerOnMsg);
-  client.publish(TOPIC_LED, ledOnMsg);
+  client.publish(TOPIC_SPEAKER, JSON.stringify(MSG_SPEAKER_ON));
+  client.publish(TOPIC_LED, JSON.stringify(MSG_LED_ON));
 
   sendNotification();
 };
@@ -59,12 +43,14 @@ export const clientSubscribe = () => {
 
     client.on('message', (topic, message) => {
       try {
-        const msg = JSON.parse(message)[0];
+        const msg = JSON.parse(message);
         console.log('MSG recieved', msg);
 
+        // (msg.name === 'INFARED' && msg.data === ('1')) ||
+        // (msg.name === 'MAGNETIC' && msg.data === 1)
         if (
-          (msg.name === 'INFARED' && msg.data.includes('1')) ||
-          (msg.name === 'MAGNETIC' && msg.data === 1)
+          msg.data === '1' &&
+          (msg.name === 'INFARED' || msg.name === 'MAGNETIC')
         ) {
           turnOnAlert();
         }

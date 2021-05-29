@@ -20,7 +20,7 @@ const output = () => {
   });
   testSubClient.on('message', (topic, message) => {
     try {
-      const msg = JSON.parse(message)[0];
+      const msg = JSON.parse(message);
       console.log('===> OUTPUT DEVICES <===');
       console.log(msg);
     } catch (error) {

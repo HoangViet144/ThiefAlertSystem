@@ -1,31 +1,17 @@
 import client from 'mqttClient';
 
 import { TOPIC_SPEAKER, TOPIC_LED, TOPIC_RELAY } from 'constants';
+import {
+  MSG_SPEAKER_OFF,
+  MSG_LED_OFF,
+  MSG_RELAY_OFF,
+  MSG_RELAY_ON,
+} from 'constants';
 
 const offAlert = (req, res) => {
-  client.publish(
-    TOPIC_SPEAKER,
-    JSON.stringify([
-      {
-        id: 3,
-        name: 'SPEAKER',
-        data: 0,
-        unit: '',
-      },
-    ])
-  );
+  client.publish(TOPIC_SPEAKER, JSON.stringify(MSG_SPEAKER_OFF));
 
-  client.publish(
-    TOPIC_LED,
-    JSON.stringify([
-      {
-        id: 1,
-        name: 'LED',
-        data: 0,
-        unit: '',
-      },
-    ])
-  );
+  client.publish(TOPIC_LED, JSON.stringify(MSG_LED_OFF));
 
   global.sentNotification = false;
 
@@ -35,17 +21,7 @@ const offAlert = (req, res) => {
 };
 
 const offSystem = (req, res) => {
-  client.publish(
-    TOPIC_RELAY,
-    JSON.stringify([
-      {
-        id: 11,
-        name: 'RELAY',
-        data: 0,
-        unit: '',
-      },
-    ])
-  );
+  client.publish(TOPIC_RELAY, JSON.stringify(MSG_RELAY_OFF));
 
   global.sentNotification = false;
 
@@ -55,17 +31,7 @@ const offSystem = (req, res) => {
 };
 
 const onSystem = (req, res) => {
-  client.publish(
-    TOPIC_RELAY,
-    JSON.stringify([
-      {
-        id: 11,
-        name: 'RELAY',
-        data: 1,
-        unit: '',
-      },
-    ])
-  );
+  client.publish(TOPIC_RELAY, JSON.stringify(MSG_RELAY_ON));
 
   global.sentNotification = false;
 
