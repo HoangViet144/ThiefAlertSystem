@@ -1,14 +1,24 @@
-import client from 'mqttClient';
+import {} from 'dotenv/config';
+import mqtt from 'mqtt';
+
 import { TOPIC_SPEAKER, TOPIC_LED, TOPIC_RELAY } from 'constants';
 
+const { MQTT_USER_NAME, MQTT_PASSWORD } = process.env;
+
+const testSubClient = mqtt.connect({
+  servers: [{ host: 'io.adafruit.com', port: 1883, protocol: 'tcp' }],
+  username: MQTT_USER_NAME,
+  password: MQTT_PASSWORD,
+});
+
 const output = () => {
-  client.on('connect', () => {
+  testSubClient.on('connect', () => {
     console.log('===> Output devices is ready <===');
-    client.subscribe(TOPIC_SPEAKER);
-    client.subscribe(TOPIC_LED);
-    client.subscribe(TOPIC_RELAY);
+    testSubClient.subscribe(TOPIC_SPEAKER);
+    testSubClient.subscribe(TOPIC_LED);
+    testSubClient.subscribe(TOPIC_RELAY);
   });
-  client.on('message', (topic, message) => {
+  testSubClient.on('message', (topic, message) => {
     try {
       const msg = JSON.parse(message)[0];
       console.log('===> OUTPUT DEVICES <===');
