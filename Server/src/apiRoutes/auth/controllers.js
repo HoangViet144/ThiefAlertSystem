@@ -4,7 +4,7 @@ import { User } from 'models';
 const authenticate = async (req, res) => res.send(req.user);
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, fcmtoken } = req.body;
 
   try {
     const user = await User.findOne({ where: { email } });
@@ -16,6 +16,10 @@ const login = async (req, res) => {
     if (!isValidCredential) {
       return res.status(400).send({ error: 'Invalid credentials!' });
     }
+    await user.update({
+      fcmtoken,
+    });
+    await user.reload();
     const token = await user.genAuthToken();
     return res.status(200).send({ token });
   } catch (error) {

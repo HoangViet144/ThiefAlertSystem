@@ -1,6 +1,9 @@
 import {} from 'dotenv/config';
 import mqtt from 'mqtt';
 
+import admin from 'firebase/firebase';
+import { User } from 'models';
+
 import {
   TOPIC_INFARED,
   TOPIC_MAGNETIC,
@@ -17,19 +20,39 @@ const client = mqtt.connect({
   password: MQTT_PASSWORD,
 });
 
-const turnOnAlert = () => {
+const turnOnAlert = async () => {
   console.log('TURN ON ALERT');
 
   client.publish(TOPIC_SPEAKER, JSON.stringify(MSG_SPEAKER_ON));
   client.publish(TOPIC_LED, JSON.stringify(MSG_LED_ON));
 
-  sendNotification();
+  await sendNotification();
 };
 
-const sendNotification = () => {
+const sendNotification = async () => {
   if (!global.sentNotification) {
     console.log('Send notification via firebase to User');
     global.sentNotification = true;
+
+    const users = await User.findAll();
+    const token = users[0].fcmtoken;
+
+    console.log(users);
+
+    if (token) {
+      await admin.messaging().sendToDevice(
+        [token],
+        {
+          data: {
+            message: 'Alert!!!!! Your house is being broken in!!!!',
+          },
+        },
+        {
+          contentAvailable: true,
+          priority: 'high',
+        }
+      );
+    }
   }
 };
 
@@ -41,7 +64,7 @@ export const clientSubscribe = () => {
       client.subscribe(TOPIC_MAGNETIC);
     });
 
-    client.on('message', (topic, message) => {
+    client.on('message', async (topic, message) => {
       try {
         const msg = JSON.parse(message);
         console.log('MSG recieved', msg);
@@ -52,7 +75,7 @@ export const clientSubscribe = () => {
           msg.data === '1' &&
           (msg.name === 'INFARED' || msg.name === 'MAGNETIC')
         ) {
-          turnOnAlert();
+          await turnOnAlert();
         }
       } catch (error) {
         console.error(error);

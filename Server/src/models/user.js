@@ -27,6 +27,9 @@ export default (sequelize, DataTypes) => {
       emergencyNumber: {
         type: DataTypes.STRING,
       },
+      fcmtoken: {
+        type: DataTypes.STRING(1024),
+      },
     },
     {
       hooks: {
