@@ -9,6 +9,7 @@ import outputSubscriber from 'utils/outputSubscriber.js';
 const { PORT } = process.env;
 
 global.sentNotification = false;
+global.systemStatus = 'on';
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

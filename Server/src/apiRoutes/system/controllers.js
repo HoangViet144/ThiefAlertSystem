@@ -24,6 +24,7 @@ const offSystem = (req, res) => {
   client.publish(TOPIC_RELAY, JSON.stringify(MSG_RELAY_OFF));
 
   global.sentNotification = false;
+  global.systemStatus = 'off';
 
   console.log('!!! TURN OFF THE WHOLE SYSTEM !!!');
 
@@ -40,4 +41,8 @@ const onSystem = (req, res) => {
   res.send('ON SYSTEM');
 };
 
-export { offAlert, offSystem, onSystem };
+const getSystemStatus = (req, res) => {
+  res.send({ status: global.systemStatus });
+};
+
+export { offAlert, offSystem, onSystem, getSystemStatus };
