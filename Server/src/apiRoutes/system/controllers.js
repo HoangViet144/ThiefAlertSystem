@@ -21,6 +21,10 @@ const offAlert = (req, res) => {
 };
 
 const offSystem = (req, res) => {
+  // JUST TO BE SAFE
+  client.publish(TOPIC_SPEAKER, JSON.stringify(MSG_SPEAKER_OFF));
+  client.publish(TOPIC_LED, JSON.stringify(MSG_LED_OFF));
+
   client.publish(TOPIC_RELAY, JSON.stringify(MSG_RELAY_OFF));
 
   global.sentNotification = false;
@@ -34,7 +38,12 @@ const offSystem = (req, res) => {
 const onSystem = (req, res) => {
   client.publish(TOPIC_RELAY, JSON.stringify(MSG_RELAY_ON));
 
+  // JUST TO BE SAFE
+  client.publish(TOPIC_SPEAKER, JSON.stringify(MSG_SPEAKER_OFF));
+  client.publish(TOPIC_LED, JSON.stringify(MSG_LED_OFF));
+
   global.sentNotification = false;
+  global.systemStatus = 'on';
 
   console.log('!!! SYSTEM IS TURNED ON !!!');
 

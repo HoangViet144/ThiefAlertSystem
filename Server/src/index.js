@@ -4,6 +4,7 @@ import { clientSubscribe } from 'mqttClient';
 
 import testInfared from 'utils/infaredPublisher.js';
 import testMagnetic from 'utils/magneticPublisher.js';
+import testTime from 'utils/timePublisher.js';
 import outputSubscriber from 'utils/outputSubscriber.js';
 
 const { PORT } = process.env;
@@ -17,6 +18,9 @@ app.listen(PORT, () => {
 });
 
 clientSubscribe();
+
+// ==== TESTING ONLY ======
 outputSubscriber();
+testTime();
 testInfared();
 testMagnetic();

@@ -3,12 +3,14 @@ import mqtt from 'mqtt';
 
 import admin from 'firebase/firebase';
 import { User } from 'models';
+import { checkTimeInRange } from 'utils/checkTimeInRange';
 
 import {
   TOPIC_INFARED,
   TOPIC_MAGNETIC,
   TOPIC_SPEAKER,
   TOPIC_LED,
+  TOPIC_TIME,
 } from 'constants';
 import { MSG_LED_ON, MSG_SPEAKER_ON } from 'constants';
 
@@ -37,8 +39,6 @@ const sendNotification = async () => {
     const users = await User.findAll();
     const token = users[0].fcmtoken;
 
-    console.log(users);
-
     if (token) {
       await admin.messaging().sendToDevice(
         [token],
@@ -62,18 +62,34 @@ export const clientSubscribe = () => {
       console.log('Subcribe connect OK');
       client.subscribe(TOPIC_INFARED);
       client.subscribe(TOPIC_MAGNETIC);
+      client.subscribe(TOPIC_TIME);
     });
 
     client.on('message', async (topic, message) => {
       try {
-        const msg = JSON.parse(message);
-        console.log('MSG recieved', msg);
+        const { name, data } = JSON.parse(message);
+        console.log('MSG recieved', { name, data });
 
-        // (msg.name === 'INFARED' && msg.data === ('1')) ||
-        // (msg.name === 'MAGNETIC' && msg.data === 1)
+        if (name === 'TIME') {
+          global.systemStatus = checkTimeInRange(global.setting, data)
+            ? 'on'
+            : 'off';
+
+          console.log(
+            `============================================================`
+          );
+          console.log(`==== TIME IS ${data}. SYSTEM IS ${global.systemStatus}`);
+          console.log(
+            `============================================================`
+          );
+        }
+
+        // (name === 'INFARED' && data === ('1')) ||
+        // (name === 'MAGNETIC' && data === 1)
         if (
-          msg.data === '1' &&
-          (msg.name === 'INFARED' || msg.name === 'MAGNETIC')
+          global.systemStatus === 'on' &&
+          data === '1' &&
+          (name === 'INFARED' || name === 'MAGNETIC')
         ) {
           await turnOnAlert();
         }
