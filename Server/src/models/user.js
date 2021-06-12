@@ -30,6 +30,10 @@ export default (sequelize, DataTypes) => {
       fcmtoken: {
         type: DataTypes.STRING(1024),
       },
+      setting: {
+        type: DataTypes.JSON,
+        defaultValue: { start: '21:00:00', end: '06:00:00' },
+      },
     },
     {
       hooks: {
