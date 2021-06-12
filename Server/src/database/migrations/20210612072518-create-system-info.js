@@ -1,21 +1,21 @@
-'use strict';
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Datas', {
+    await queryInterface.createTable('SystemInfos', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      infared: {
+      status: {
         type: Sequelize.STRING,
         allowNull: false,
+        defaultValue: 'ON',
       },
-      magnetic: {
-        type: Sequelize.BOOLEAN,
+      setting: {
+        type: Sequelize.JSON,
         allowNull: false,
+        defaultValue: { start: '21:00:00', end: '06:00:00' },
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +29,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Datas');
+    await queryInterface.dropTable('SystemInfos');
   },
 };
