@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development nodemon --exec babel-node src/index.js",
     "build": "yarn clean && yarn build-babel && sequelize db:migrate",
     "build-babel": "babel ./src --out-dir build --ignore **/*.test.js ",
     "clean": "rm -rf build && mkdir build",
     "start": "node ./build/index.js",
+    "test": "jest test",
     "db:reset": "npx sequelize-cli db:drop && yarn db:init && yarn db:seed",
     "db:init": "npx sequelize-cli db:create && npx sequelize-cli db:migrate",
     "db:seed": "npx sequelize-cli db:seed:all"
@@ -24,6 +24,7 @@
     "express": "^4.17.1",
     "factory-girl": "^5.0.4",
     "firebase-admin": "^9.8.0",
+    "jest": "^27.0.4",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mqtt": "^4.2.6",
