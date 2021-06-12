@@ -45,4 +45,9 @@ const getSystemStatus = (req, res) => {
   res.send({ status: global.systemStatus });
 };
 
-export { offAlert, offSystem, onSystem, getSystemStatus };
+const setTimer = (req, res) => {
+  global.setting = req.body;
+  res.status(200).send({ msg: 'setting updated' });
+};
+
+export { offAlert, offSystem, onSystem, getSystemStatus, setTimer };
