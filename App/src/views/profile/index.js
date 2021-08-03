@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -15,18 +15,33 @@ import Input from '../../component/floatingLabelInput'
 import { color } from '../../constants/color'
 import { PROFILE } from '../../constants/language'
 import { normalize } from '../../constants/size'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import { BASE_URL } from '../../constants/config'
 
 const Profile = (props) => {
-  const user = useSelector(state => state.user)
-  const [userInfo, setUserInfo] = useState({ username: '', email: '', phone: '', gender: '', dob: 0 })
-  const [isHide, setIshide] = useState(true)
-  const onChangeDOB = (event, selectedDate) => {
-    setIshide(true)
-    if (selectedDate) {
-      setUserInfo(user => ({ ...user, dob: selectedDate.getTime() }))
+  const user = useSelector(state => state.user.user)
+  const [userInfo, setUserInfo] = useState({ username: '', email: '', phone: ''})
+ 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const url = BASE_URL + "/api/users"
+      const raw = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-auth-token': user.token
+        },
+      })
+      const response = await raw.json()
+      console.log(response)
+      setUserInfo({
+        username: response.fullname, 
+        email: response.email, 
+        phone: response.phone, 
+      })
     }
-  }
+    fetchUserInfo()
+  }, [])
   return (
     <View style={styles.screen}>
       <View style={styles.headerContainer}>
@@ -63,33 +78,6 @@ const Profile = (props) => {
             value={userInfo.phone}
             onChangeText={value => setUserInfo(user => ({ ...user, phone: value }))}
           />
-          <Input
-            labelStyle={styles.labelStyle}
-            label={PROFILE.GENDER}
-            placeholder={PROFILE.GENDER}
-            value={userInfo.gender}
-            onChangeText={value => setUserInfo(user => ({ ...user, gender: value }))}
-          />
-          <TouchableOpacity
-            onPress={() => setIshide(false)}
-          >
-            <Input
-              labelStyle={styles.labelStyle}
-              label={PROFILE.DOB}
-              placeholder={PROFILE.DOB}
-              value={new Date(userInfo.dob).toDateString()}
-              disabled
-            />
-          </TouchableOpacity>
-          {!isHide &&
-            <DateTimePicker
-              value={new Date(userInfo.dob)}
-              mode={'date'}
-              is24Hour={true}
-              display="default"
-              onChange={onChangeDOB}
-            />
-          }
         </View>
       </ScrollView>
       <Button

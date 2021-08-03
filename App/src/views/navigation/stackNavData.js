@@ -3,10 +3,10 @@ import {
   TouchableOpacity,
   Image
 } from 'react-native'
-import TabNavigation from './tabNavigation'
 import Setting from '../setting/index'
 import Profile from '../profile/index'
 import Home from '../home/index'
+import ComingSoon from '../comingSoon/index'
 import { color } from '../../constants/color'
 
 const headerLeftComponent = (props) => {
@@ -40,6 +40,11 @@ const StackNavigationData = [
     headerLeft: headerLeftComponent,
     name: 'profile',
     component: Profile
+  },
+  {
+    headerLeft: headerLeftComponent,
+    name: 'comingSoon',
+    component: ComingSoon
   }
 ]
 

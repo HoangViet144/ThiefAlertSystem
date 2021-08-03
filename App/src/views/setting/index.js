@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  ToastAndroid,
   ScrollView,
 } from 'react-native'
 import {
   Button,
-  Overlay
 } from 'react-native-elements'
 import { useSelector } from 'react-redux'
 import { color } from '../../constants/color'
@@ -22,6 +22,7 @@ import moment from 'moment'
 
 const Setting = ({ navigation }) => {
   const user = useSelector(state => state.user.user)
+  const [userInfo, setUserInfo] = useState({ username: '' })
   const [openTimeForm, setOpenTimeForm] = useState(false)
   const [stateSetTime, setStateSetTime] = useState(0)
   const [currentSettingTime, setCurrentSettingTime] = useState({
@@ -33,6 +34,7 @@ const Setting = ({ navigation }) => {
       title: SETTING.NOTI,
       icon: require('../../../assets/setting/noti.png'),
       style: null,
+      onPress: () => navigation.navigate('comingSoon')
     },
     {
       title: SETTING.TIMING,
@@ -44,21 +46,25 @@ const Setting = ({ navigation }) => {
       title: SETTING.TERM,
       icon: require('../../../assets/setting/term.png'),
       style: null,
+      onPress: () => navigation.navigate('comingSoon')
     },
     {
       title: SETTING.PRIVACY,
       icon: require('../../../assets/setting/privacy.png'),
       style: null,
+      onPress: () => navigation.navigate('comingSoon')
     },
     {
       title: SETTING.HELP,
       icon: require('../../../assets/setting/help.png'),
       style: null,
+      onPress: () => navigation.navigate('comingSoon')
     },
     {
       title: SETTING.ABOUT,
       icon: require('../../../assets/setting/about.png'),
       style: null,
+      onPress: () => navigation.navigate('comingSoon')
     }
   ]
   const [tmp, setTemp] = useState()
@@ -75,7 +81,7 @@ const Setting = ({ navigation }) => {
       setCurrentSettingTime({ start: tmp, end: selectedTime.getTime() })
       Alert.alert(
         "Update timing for system",
-        "Start: " + moment(tmp).format('hh:mm') + "\nEnd: " + moment(selectedTime).format('hh:mm')
+        "Start: " + moment(tmp).format('hh:mm:ss') + "\nEnd: " + moment(selectedTime).format('hh:mm:ss')
       )
       try {
         const response = await fetch(BASE_URL + "/api/system/set-timer", {
@@ -86,16 +92,57 @@ const Setting = ({ navigation }) => {
             'x-auth-token': user.token
           },
           body: JSON.stringify({
-            start: new Date(tmp),
-            end: new Date(selectedTime)
+            start: moment(tmp).format('hh:mm:ss'),
+            end: moment(selectedTime).format('hh:mm:ss')
           })
         })
-        console.log(response.status)
+        console.log("set timer: " + response.status)
       } catch (err) {
         console.log(err)
       }
     }
   }
+  useEffect(() => {
+    if (openTimeForm)
+      ToastAndroid.showWithGravityAndOffset(
+        "Please choose the start time of the system",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        0,
+        50
+      );
+  }, [openTimeForm])
+  useEffect(() => {
+    if (stateSetTime === 1)
+      ToastAndroid.showWithGravityAndOffset(
+        "Please choose the end time of the system",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        0,
+        50
+      );
+  }, [stateSetTime])
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const url = BASE_URL + "/api/users"
+      const raw = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-auth-token': user.token
+        },
+      })
+      const response = await raw.json()
+      console.log(response)
+      setUserInfo({
+        username: response.fullname,
+        email: response.email,
+        phone: response.phone,
+      })
+    }
+    fetchUserInfo()
+  }, [])
   return (
     <View style={styles.screen}>
       <View style={styles.headerContainer}>
@@ -110,7 +157,7 @@ const Setting = ({ navigation }) => {
               source={require('../../../assets/home/avatar.jpg')}
               style={styles.avatar}
             />
-            <Text style={styles.username}>Tran Hoang Viet</Text>
+            <Text style={styles.username}>{userInfo.username}</Text>
           </View>
           <View style={styles.nextContainer}>
 

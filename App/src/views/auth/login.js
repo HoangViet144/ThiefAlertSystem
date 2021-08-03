@@ -28,7 +28,7 @@ const Login = (props) => {
     setMess('')
     try {
       const token = await messaging().getToken()
-      console.log(token)
+      console.log("fcm token: "+ token)
       const raw = await fetch(BASE_URL + '/api/auth', {
         method: 'POST',
         headers: {
@@ -38,11 +38,12 @@ const Login = (props) => {
         body: JSON.stringify({
           email: user.username,
           password: user.password,
-          //fcmtoken: token
+          fcmtoken: token
         })
       })
       const response = await raw.json()
       if(response.hasOwnProperty('token')){
+        console.log("token received: "+response.token)
         dispatch(authAction.login(response))
       }
       else{

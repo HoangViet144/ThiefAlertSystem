@@ -18,7 +18,7 @@ import {
 
 const Home = ({ navigation }) => {
   const user = useSelector(state => state.user.user)
-  const [systemStatus, setSystemStatus] = useState(1)
+  const [systemStatus, setSystemStatus] = useState(0)
   const status = [HOME.CHECKING, HOME.ON, HOME.OFF]
   const statusText = [HOME.CHECKINGTEXT, HOME.ONTEXT, HOME.OFFTEXT]
   const statusImg = [
@@ -30,6 +30,21 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     console.log('fetch current system status')
+    const fetchSysStatus = async () => {
+      const raw = await fetch(BASE_URL + '/api/system/status', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-auth-token': user.token
+        },
+      })
+      const response = await raw.json()
+      console.log("current system status " + response.status)
+      if (response.status === "on") setSystemStatus(1)
+      else setSystemStatus(2)
+    }
+    fetchSysStatus()
   }, [])
   const updateStatusHandler = async () => {
     const url = BASE_URL + (systemStatus === 1 ? "/api/system/off-system" : "/api/system/on-system")
