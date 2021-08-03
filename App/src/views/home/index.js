@@ -15,6 +15,7 @@ import { BASE_URL } from '../../constants/config'
 import {
   Tooltip
 } from 'react-native-elements'
+import messaging from '@react-native-firebase/messaging'
 
 const Home = ({ navigation }) => {
   const user = useSelector(state => state.user.user)
@@ -27,7 +28,40 @@ const Home = ({ navigation }) => {
     require('../../../assets/home/off.png')
   ]
   const statusColor = [color.GRAY, color.ON, color.OFF]
-
+  useEffect(() => {
+    console.log("create fcm listener")
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      console.log(remoteMessage)
+      console.log(remoteMessage["data"])
+      console.log(remoteMessage["data"]["message"])
+      Alert.alert(
+        'A new message has arrived!',
+        remoteMessage["data"]["message"],
+        [
+          {
+            text: "Turn off alert",
+            onPress: turnOffAlert
+          }
+        ]
+      );
+    });
+    return unsubscribe;
+  }, [])
+  const turnOffAlert = async () => {
+    try {
+      const response = await fetch(BASE_URL + "/api/system/off-alert", {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-auth-token': user.token
+        },
+      })
+      console.log("turn off alert: " + response.status)
+    } catch (err) {
+      console.log(err)
+    }
+  }
   useEffect(() => {
     console.log('fetch current system status')
     const fetchSysStatus = async () => {
