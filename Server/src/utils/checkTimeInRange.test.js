@@ -109,3 +109,59 @@ describe('Start time and end time is not in the same day 21:00 - 06:00', () => {
     });
   });
 });
+
+describe('Always on (00:00:00 - 23:59:59)', () => {
+  const timeRange = {
+    start: '00:00:00',
+    end: '23:59:59',
+  };
+
+  describe('Time is  10:00:00', () => {
+    it('returns true', () => {
+      const time = '10:00:00';
+      expect(checkTimeInRange(timeRange, time)).toBe(true);
+    });
+  });
+
+  describe('Time is 15:00:00', () => {
+    it('returns true', () => {
+      const time = '15:00:00';
+      expect(checkTimeInRange(timeRange, time)).toBe(true);
+    });
+  });
+
+  describe('Time is 23:00:00', () => {
+    it('returns true', () => {
+      const time = '23:00:00';
+      expect(checkTimeInRange(timeRange, time)).toBe(true);
+    });
+  });
+
+  describe('Time is 03:50:00', () => {
+    it('returns true', () => {
+      const time = '03:50:00';
+      expect(checkTimeInRange(timeRange, time)).toBe(true);
+    });
+  });
+
+  describe('Time is 20:00:00', () => {
+    it('returns true', () => {
+      const time = '20:00:00';
+      expect(checkTimeInRange(timeRange, time)).toBe(true);
+    });
+  });
+
+  describe('Time is 07:00:00', () => {
+    it('returns true', () => {
+      const time = '07:00:00';
+      expect(checkTimeInRange(timeRange, time)).toBe(true);
+    });
+  });
+
+  describe('Time is 12:00:00', () => {
+    it('returns true', () => {
+      const time = '12:00:00';
+      expect(checkTimeInRange(timeRange, time)).toBe(true);
+    });
+  });
+});

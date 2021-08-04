@@ -6,6 +6,8 @@ import {
   MSG_LED_OFF,
   MSG_RELAY_OFF,
   MSG_RELAY_ON,
+  MSG_SPEAKER_ON,
+  MSG_SPEAKER_OFF,
 } from 'constants';
 
 const offAlert = (req, res) => {
@@ -59,4 +61,14 @@ const setTimer = (req, res) => {
   res.status(200).send({ msg: 'setting updated' });
 };
 
-export { offAlert, offSystem, onSystem, getSystemStatus, setTimer };
+const onAlert = (req, res) => {
+  client.publish(TOPIC_SPEAKER, JSON.stringify(MSG_SPEAKER_ON));
+
+  client.publish(TOPIC_LED, JSON.stringify(MSG_LED_ON));
+
+  console.log('===> TURN ON ALERT MANUALLY <===');
+
+  res.send('On Alert');
+};
+
+export { offAlert, offSystem, onSystem, getSystemStatus, setTimer, onAlert };
