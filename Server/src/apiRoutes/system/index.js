@@ -7,6 +7,7 @@ import {
   getSystemStatus,
   setTimer,
   onAlert,
+  offAlertManually,
 } from './controllers';
 import auth from '../middlewares/auth';
 
@@ -17,8 +18,9 @@ systemRouter.use(auth);
 systemRouter.get('/off-system', offSystem);
 systemRouter.get('/on-system', onSystem);
 systemRouter.get('/off-alert', offAlert);
-systemRouter.get('/on-alert', oNAlert);
+systemRouter.get('/on-alert', onAlert);
 systemRouter.get('/status', getSystemStatus);
 systemRouter.post('/set-timer', setTimer);
+systemRouter.get('/off-alert-manually', offAlertManually);
 
 export default systemRouter;

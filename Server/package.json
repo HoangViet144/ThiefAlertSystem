@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon --exec babel-node src/index.js",
+    "dev": "nodemon --exec babel-node src/index.js",
     "build": "yarn clean && yarn build-babel && sequelize db:migrate",
     "build-babel": "babel ./src --out-dir build --ignore **/*.test.js ",
     "clean": "rm -rf build && mkdir build",

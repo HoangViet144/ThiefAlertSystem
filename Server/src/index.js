@@ -20,7 +20,7 @@ app.listen(PORT, () => {
 clientSubscribe();
 
 // ==== TESTING ONLY ======
-outputSubscriber();
-testTime();
-testInfared();
-testMagnetic();
+// outputSubscriber();
+// testTime();
+// testInfared();
+// testMagnetic();
