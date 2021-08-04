@@ -23,8 +23,8 @@ export const SETTING = {
   TIMING: "Timing",
   TERM: "Term & conditions",
   PRIVACY: "Privacy policy",
-  HELP: "Help center",
-  ABOUT: "About us"
+  HELP: "Turn off alert",
+  ABOUT: "Turn on alert"
 }
 export const PROFILE = {
   TITLE: "Profile",

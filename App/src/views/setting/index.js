@@ -58,15 +58,27 @@ const Setting = ({ navigation }) => {
       title: SETTING.HELP,
       icon: require('../../../assets/setting/help.png'),
       style: null,
-      onPress: () => navigation.navigate('comingSoon')
+      onPress: () => turnOnOffAlert("off")
     },
     {
       title: SETTING.ABOUT,
       icon: require('../../../assets/setting/about.png'),
       style: null,
-      onPress: () => navigation.navigate('comingSoon')
+      onPress: () => turnOnOffAlert("on")
     }
   ]
+  const turnOnOffAlert = async (status) => {
+    const url = BASE_URL + (status === "on" ? "/api/system/on-alert" : "/api/system/off-alert-manually")
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-auth-token': user.token
+      },
+    })
+    console.log("turn on/off alert" + response.status)
+  }
   const [tmp, setTemp] = useState()
   const timingStartHandler = (e, selectedTime) => {
     setOpenTimeForm(false)
